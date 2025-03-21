@@ -1,0 +1,98 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block css %}
+  <link href="{% static '/accounts/css/styles.css' %}" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+  <main class=" w-50 p-5 m-auto bg-light border rounded shadow ">
+
+    <!-- Title -->
+    <h2 class="border-bottom border-gray pb-4 mb-0"><center><i class="bi bi-person-fill my-5"></i> | Log in</center></h2>
+
+    <!-- Form -->
+    <form method="post" class="bg-light border rounded p-5 shadow-lg" id="login" autocomplete="off" style="margin-top: 50px;">
+      {% csrf_token %}
+
+      {% include 'messages.html'%}
+
+      <!-- Form Input -->
+      <div class="input-group flex-nowrap mb-3">
+        <span class="input-group-text" id="wrapping-user"><i class="bi bi-envelope"></i></span>
+        {{form.username}}
+      </div>
+
+      <!-- Form Input -->
+      <div class="input-group flex-nowrap my-3">
+        <span class="input-group-text" id="wrapping-pass"><i class="bi bi-key"></i></span>
+        {{form.password}}
+          <span class="input-group-text" onclick="password_show_hide();">
+            <i class="bi bi-eye-fill" id="show_eye"></i>
+            <i class="bi bi-eye-slash-fill d-none" id="hide_eye"></i>
+          </span>
+      </div>
+
+      <!-- Form Submit -->
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+        <a class="btn btn-outline-success col-md-6 col-lg-2 btn-block" href="{% url 'accounts:register' %}" role="button">Register</a>
+        <button class="btn btn-primary col-md-6 col-lg-2 btn-block" type="submit">Log in</button>
+      </div>
+
+    </form>
+
+    <!-- Form Overlay -->
+    <div id="loading" class="overlay spanner">
+      <div class="loader"></div>
+      <p>Authentication is in progress please wait.</p>
+    </div>
+
+  </main>
+{% endblock content %}
+
+{% block js %}
+  {{block.super}}
+  <script>
+
+    $(document).ready(function(){
+
+      $('#infoToast').toast('show');
+
+      // Timeout Messages
+      setTimeout(function(){
+        if ($('#messages').length > 0){
+          $('#messages').remove();
+        }
+      },2000);
+
+      // Form Overlay
+      $('form').on('submit', function(){
+        $('div#loading').addClass('show');
+        setTimeout(function() {
+          $('div#loading').removeClass('show');
+        }, 5000);
+        });
+
+      });
+
+      // Password
+      function password_show_hide() {
+        var $passwordField = $("#id_password");
+        var $showEye = $("#show_eye");
+        var $hideEye = $("#hide_eye");
+
+        $hideEye.removeClass("d-none");
+
+        if ($passwordField.attr("type") === "password") {
+          $passwordField.attr("type", "text");
+          $showEye.hide();
+          $hideEye.show();
+        } else {
+          $passwordField.attr("type", "password");
+          $showEye.show();
+          $hideEye.hide();
+        }
+      }
+
+  </script>
+{% endblock js %}

@@ -1,0 +1,265 @@
+{% extends 'modules/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    <!-- Title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1>Dashboard Module</h1>
+    </div>
+
+    <!-- Install & Search -->
+    <div class="d-flex justify-content-sm-between pt-3 pb-2 mb-3 border-bottom">
+
+      <!-- Install -->
+      {% if perms.accounts.add_module %}
+        <form method="POST" class="p-2" enctype="multipart/form-data" id="InstallModule">
+          {% csrf_token %}
+
+          <!-- Btn Modal -->
+          <div class="align-self-center">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#installMod">Install Module</button>
+          </div>
+
+          <!-- Modal -->
+          <div class="modal fade" id="installMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="installModLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="installModLabel">Install New Module</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group input-group">
+                    <span class="input-group-text" id="inputGroup-sizing">Name</span>
+                    {{formsmodule.module_name}}
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary col-2" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-success col-2" id="BtnInstall" name="btn_action" value="install_module">Install</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      {% endif %}
+
+      <!-- Search -->
+      <form method="GET" class="ms-auto w-25 p-2 d-grid gap-2 d-md-flex justify-content-md-end">
+        <div class="input-group">
+          <input id="search_param" name="search_param" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="BtnSearch" value="{{request.GET.search_param}}">
+          <button class="btn btn-outline-secondary" type="submit" id="BtnSearch">Seacrh</button>
+        </div>
+        <button class="btn btn-sm" id="btn-reset-search" style="display:none;"><i class="bi bi-x" style="color:red"></i></button>
+      </form>
+
+    </div>
+
+    {% include 'messages.html'%}
+
+    {% if module_none %}
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading"><i class="bi bi-search mx-2"></i> No data found...</h4>
+        <p><strong>{{module_none}}</strong></p>
+      </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="table-responsive py-3">
+
+      <!-- Table -->
+      <table class="table table-striped table-bordered">
+
+        <!-- Head -->
+        <thead>
+          <tr class="text-center">
+            <th scope="col" style="width:60%">Name</th>
+            <th scope="col">Version</th>
+            <th scope="col" colspan="3">Action</th>
+          </tr>
+        </thead>
+
+        <!-- body -->
+        <tbody>
+          {% for module in listmodules %}
+            <tr>
+              <td>{{module.name}}</td>
+              <td>{{module.version}}</td>
+
+              {% if module.installed == True %}
+                <td class="text-center" style="border-right:none">
+                  <a class="btn btn-outline-success btn-sm" href="{% url 'products:home' module.name %}" type="button">View</a>
+                </td>
+                {% if perms.accounts.change_module %}
+                  <td class="text-center" style="border-right:none;border-left:none">
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'modules:upgrade' module.name %}" type="button">Upgrade</a>
+                  </td>
+                {% endif %}
+                {% if perms.accounts.delete_module %}
+                  <td class="text-center" style="border-left:none">
+                    <!-- Action -->
+                    <button class="btn btn-outline-danger btn-sm" href="{% url 'modules:uninstall' module.name %}" type="button" data-bs-toggle="modal" data-bs-target="#uninstallMod{{forloop.counter0|add:listmodules.start_index}}">Uninstall</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="uninstallMod{{forloop.counter0|add:listmodules.start_index}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uninstallModLabel{{forloop.counter0|add:listmodules.start_index}}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="uninstallModLabel{{forloop.counter0|add:listmodules.start_index}}">Uninstall Module</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure to Uninstall this Module?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary col-2" data-bs-dismiss="modal">Close</button>
+                            <a class="btn btn btn-danger col-2" href="{% url 'modules:uninstall' module.name %}" type="button">Yes</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                {% endif %}
+              {% else %}
+                <td class="text-center" style="border-right:none">
+                  <a class="btn btn-outline-success btn-sm" href="{% url 'products:home' module.name %}" type="button">View</a>
+                </td>
+                {% if perms.accounts.change_module %}
+                  <td class="text-center" style="border-right:none;border-left:none">
+                    <button class="btn btn-secondary btn-sm disabled" type="button">Upgrade</button>
+                  </td>
+                {% endif %}
+                {% if perms.accounts.delete_module %}
+                  <td class="text-center" style="border-left:none">
+                    <button class="btn btn-secondary btn-sm disabled" type="button">Uninstall</button>
+                  </td>
+                {% endif %}
+              {% endif %}
+
+            </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+      <!-- Pagination -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+        {% if listmodules.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ listmodules.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% endif %}
+
+        {% for i in listmodules.paginator.page_range %}
+          {% if listmodules.number == i %}
+          <li class="page-item active">
+            <a class="page-link" href="?page={{ i }}">{{ listmodules.number }}</a>
+          </li>
+          {% elif i > listmodules.number|add:'-3' and i < listmodules.number|add:'3' %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if listmodules.paginator.num_pages > listmodules.number|add:'3' %}
+          <li><a class="page-link" href="?page={{ listmodules.number|add:'3' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if listmodules.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ listmodules.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% endif %}
+        </ul>
+      </nav>
+
+    </div>
+
+    <!-- Form Overlay -->
+    <div id="loading" class="overlay spanner">
+      <div class="loader"></div>
+      <p>Operations is in progress please wait.</p>
+    </div>
+
+    <!-- Toast -->
+    <input type="hidden" id="error_message" value="{{error_message}}">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+      <div id="liveToast" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{error_message}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+{% endblock content %}
+
+{% block js %}
+  {{block.super}}
+  <script>
+
+    $(document).ready(function(){
+
+      // Error Messages
+      if($('#error_message').val().length > 0){
+        $('#liveToast').toast('show');
+      }
+
+      // Form Overlay
+      $('#InstallModule').on('submit', function(){
+        $('div#loading').addClass('show');
+        setTimeout(function() {
+          $('div#loading').removeClass('show');
+        }, 5000);
+      });
+
+      // Timeout Messages
+      setTimeout(function(){
+        if ($('#messages').length > 0){
+          $('#messages').remove();
+        }
+      },2000);
+
+      // Show Reset Search
+      var search_param = $('#search_param').val();
+      if (search_param.length>0){
+        $('#btn-reset-search').show();
+      }
+
+      // Reset Search
+      $('#btn-reset-search').on('click', function(){
+        $('#search_param').val('');
+      });
+
+    });
+
+  </script>
+{% endblock js %}

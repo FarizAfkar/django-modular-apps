@@ -1,0 +1,162 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load price_filter %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    <!-- Title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1>Update Product</h1>
+    </div>
+
+    <!-- Install & Search -->
+    <div class="d-flex justify-content-sm-between pt-3 pb-2 mb-3 border-bottom">
+    </div>
+
+    {% if product_none %}
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading"><i class="bi bi-search mx-2"></i> No data found...</h4>
+        <p><strong>{{product_none}}</strong></p>
+      </div>
+    {% endif %}
+
+    <form method="POST" class="p-2" enctype="multipart/form-data" id="UpdateProduct">
+      {% csrf_token %}
+      <div class="card text-center w-50 mx-auto">
+        <div class="card-header">
+          {{module}} | {{barcode}}
+        </div>
+        <div class="card-body">
+          {% include 'messages.html'%}
+          {% for form in details %}
+            {% if form.name == 'price' %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <input id="Price" type="text" class="form-control" name="{{form.name}}" value="{{form.value|floatformat:"0"|intcomma|to_rupiah}}" required>
+              </div>
+            {% else %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                {{form}}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="card-footer text-body-secondary">
+          <a href="{% url 'products:home' module %}" class="btn btn-outline-secondary">Back</a>
+          <button type="submit" class="btn btn-outline-primary" id="BtnUpdate" name="btn_action" value="update_product">Update</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Form Overlay -->
+    <div id="loading" class="overlay spanner">
+      <div class="loader"></div>
+      <p>Operations is in progress please wait.</p>
+    </div>
+
+    <!-- Toast -->
+    <input type="hidden" id="info_message" value="{{info_message}}">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+      <div id="liveToastInfo" class="toast align-items-center text-bg-info" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{info_message}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <input type="hidden" id="error_message" value="{{error_message}}">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+      <div id="liveToastError" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{error_message}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+{% endblock content %}
+
+{% block js %}
+  {{block.super}}
+  <script>
+
+    $(document).ready(function(){
+
+      // Info Messages
+      if($('#info_message').val().length > 0){
+        $('#liveToastInfo').toast('show');
+      }
+
+      // Error Messages
+      if($('#error_message').val().length > 0){
+        $('#liveToastError').toast('show');
+      }
+
+      // Form Overlay
+      $('#UpdateProduct').on('submit', function(){
+        $('div#loading').addClass('show');
+        $('#Price').val(numberJoiner($('#Price').val()))
+        setTimeout(function() {
+          $('div#loading').removeClass('show');
+        }, 5000);
+      });
+
+      // Timeout Messages
+      setTimeout(function(){
+        if ($('#messages').length > 0){
+          $('#messages').remove();
+        }
+      },2000);
+
+      // Prevent Invalid Chars
+      const invalidChars = ["-", "e", "+", "E", ",", "."];
+      $("input[type='number']").on("input keydown", function(e){
+        if(invalidChars.includes(e.key)){
+          e.preventDefault();
+        };
+        if (this.value.length == 0 && e.which == 48 ){
+          e.preventDefault();
+        };
+      });
+
+      // Number Joiner
+      function numberJoiner(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return parts.join("");
+      };
+
+      // Number Sparator
+      function numberSparator(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return parts.join(".");
+      };
+
+      // Format Price
+      $('#Price').on('input keyup', function(evt){
+        $(this).val($(this).val().replace(/^(0*)/, ''));
+        $(this).val($(this).val().replace(/[^0-9]/g, ''));
+        var price = $(this).val();
+        var price_format = numberSparator(price)
+        $('#Price').val(price_format)
+      });
+
+    });
+
+  </script>
+{% endblock js %}

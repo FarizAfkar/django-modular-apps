@@ -1,0 +1,237 @@
+{% extends 'modules/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+<style>
+  .hidden-button{
+    visibility: hidden;
+  }
+</style>
+{% endblock css %}
+
+{% block content %}
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    <!-- Title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1>Upgrade Module
+    </div>
+
+    <!-- Install & Search -->
+    <div class="d-flex justify-content-sm-between pt-3 pb-2 mb-3 border-bottom">
+    </div>
+
+    {% if product_none %}
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading"><i class="bi bi-search mx-2"></i> No data found...</h4>
+        <p><strong>{{product_none}}</strong></p>
+      </div>
+    {% endif %}
+
+    <form method="POST" class="p-2" enctype="multipart/form-data" id="UpdateProduct">
+      {% csrf_token %}
+      <div class="card text-center w-50 mx-auto">
+        <div class="card-header">
+          {{name}}
+        </div>
+        <div class="card-body">
+          {% include 'messages.html'%}
+          {% for form in details_product %}
+            {% if form.name == 'name' %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
+              </div>
+            {% elif form.name == 'barcode' %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
+              </div>
+            {% elif form.name == 'price' %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
+              </div>
+            {% elif form.name == 'stock' %}
+              <div class="input-group mb-3">
+                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          <hr>
+
+          {% for keys, values in details_module.items %}
+            <div class="input-group mb-3">
+              <span class="input-group-text col-2" id="inputGroup-{{keys}}">{{keys}}</span>
+              <input type="text" class="form-control text-end" value="{{values}}" disabled>
+            </div>
+          {% endfor %}
+
+          <!-- First Service Container (Cannot be deleted) -->
+          <div id="formContainer-1" class="containerDetails">
+            <div class="row g-2">
+              <div class="col-md-5">
+                <div class="input-group">
+                  <span class="input-group-text">Name</span>
+                  <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="input-group">
+                  <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                  <select class="form-select" id="field-type-add-1" name="field-type-add-1">
+                    <option selected disabled>Choose...</option>
+                    <option value="TextField">Text</option>
+                    <option value="FileField">File</option>
+                    <option value="IntegerField">Number</option>
+                    <option value="DateTimeField">Date & Time</option>
+                    <option value="BooleanField">Radio</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-danger btn-delContainer hidden-button"><i class="bi bi-x mb-2"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Placeholder for additional services -->
+          <div id="tmp-other-pricing"></div>
+
+          <!-- Add Button -->
+          <button type="button" id="addContainer" class="btn btn-primary mt-3"><i class="bi bi-plus-lg mb-2" ></i></button>
+
+        </div>
+        <div class="card-footer text-body-secondary">
+          <a href="{% url 'modules:home' %}" class="btn btn-outline-secondary">Back</a>
+          <button type="submit" class="btn btn-outline-primary" id="BtnUpdate" name="btn_action" value="upgrade_module">Upgrade</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Form Overlay -->
+    <div id="loading" class="overlay spanner">
+      <div class="loader"></div>
+      <p>Operations is in progress please wait.</p>
+    </div>
+
+    <!-- Toast -->
+    <input type="hidden" id="info_message" value="{{info_message}}">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+      <div id="liveToastInfo" class="toast align-items-center text-bg-info" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{info_message}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <input type="hidden" id="error_message" value="{{error_message}}">
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+      <div id="liveToastError" class="toast align-items-center text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{error_message}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+{% endblock content %}
+
+{% block js %}
+  {{block.super}}
+  <script>
+
+    $(document).ready(function(){
+      // Info Messages
+      if($('#info_message').val().length > 0){
+        $('#liveToastInfo').toast('show');
+      }
+
+      // Error Messages
+      if($('#error_message').val().length > 0){
+        $('#liveToastError').toast('show');
+      }
+
+      // Form Overlay
+      $('#UpdateProduct').on('submit', function(){
+        $('div#loading').addClass('show');
+        $('#Price').val(numberJoiner($('#Price').val()))
+        setTimeout(function() {
+          $('div#loading').removeClass('show');
+        }, 5000);
+      });
+
+      // Timeout Messages
+      setTimeout(function(){
+        if ($('#messages').length > 0){
+          $('#messages').remove();
+        }
+      },2000);
+
+    });
+
+  </script>
+
+  <script>
+    jQuery(function ($) {
+        var maxCounter = 3; // Max additional services
+        var addContainer = $('#addContainer');
+        var cloneDiv = $('#formContainer-1');
+
+        function reorderId() {
+            $('.containerDetails').each(function (index) {
+                let n = index + 1; // Start numbering from 1
+
+                $(this).attr("id", "formContainer-" + n);
+                $(this).find('input[name^="field-name-add"]').attr({
+                    "id": "field-name-add-" + n,
+                    "name": "field-name-add-" + n
+                });
+                $(this).find('select[name^="field-type-add"]').attr({
+                    "id": "field-type-add-" + n,
+                    "name": "field-type-add-" + n
+                });
+
+                // Show delete button only for cloned items
+                if (n > 1) {
+                    $(this).find('.btn-delContainer').removeClass('hidden-button');
+                } else {
+                    $(this).find('.btn-delContainer').addClass('hidden-button');
+                }
+            });
+        }
+
+        addContainer.on('click', function () {
+            var counter = $('.containerDetails').length;
+
+            if (counter < maxCounter) {
+                var newOne = cloneDiv.clone(true).insertBefore('#tmp-other-pricing').addClass('mt-3');
+                newOne.find('.btn-delContainer').removeClass('hidden-button');
+                newOne.find('input[id^="field-name-add"]').val('');
+                newOne.find('select[id^="field-type-add"]').val('Choose...');
+
+                reorderId();
+            } else {
+                alert('Maximum additional services allowed: ' + maxCounter);
+            }
+        });
+
+        $(document).on('click', '.btn-delContainer', function () {
+            $(this).closest(".containerDetails").remove();
+            reorderId();
+        });
+
+        reorderId(); // Ensure correct button visibility on load
+    });
+</script>
+{% endblock js %}
