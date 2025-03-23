@@ -8,18 +8,12 @@
 {% endblock css %}
 
 {% block content %}
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
 
     <!-- Title -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1>Detail Product</h1>
     </div>
-
-    <!-- Install & Search -->
-    <div class="d-flex justify-content-sm-between pt-3 pb-2 mb-3 border-bottom">
-    </div>
-
-    {% include 'messages.html'%}
 
     {% if product_none %}
       <div class="alert alert-info" role="alert">
@@ -28,8 +22,8 @@
       </div>
     {% endif %}
 
-    <form method="GET" class="p-2" enctype="multipart/form-data" id="DetailProduct">
-      <div class="card text-center w-50 mx-auto">
+    <form method="GET" class="p-2 mx-auto" enctype="multipart/form-data" id="DetailProduct" style="max-width: 900px;">
+      <div class="card text-center w-100 mx-auto">
         <div class="card-header">
           {{module}} | {{barcode}}
         </div>
@@ -37,34 +31,34 @@
           {% for form in details %}
             {% if form.name == 'name' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
                 <input type="text" class="form-control text-end" value="{{form.value}}" disabled>
               </div>
             {% elif form.name == 'barcode' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
                 <input type="text" class="form-control text-end" value="{{form.value}}" disabled>
               </div>
             {% elif form.name == 'price' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
                 <input type="text" class="form-control text-end" value="{{form.value|floatformat:"0"|intcomma|to_rupiah}}" disabled>
               </div>
             {% elif form.name == 'stock' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
                 <input type="text" class="form-control text-end" value="{{form.value}}" disabled>
               </div>
             {% else %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.label}}</span>
                 <input type="text" class="form-control text-end" value="{{form.value}}" disabled>
               </div>
             {% endif %}
           {% endfor %}
         </div>
         <div class="card-footer text-body-secondary">
-          <a href="{% url 'products:home' module %}" class="btn btn-outline-secondary">Back</a>
+          <a href="{% url 'products:home' module %}" class="btn btn-outline-secondary col-3 col-sm-2">Back</a>
         </div>
       </div>
     </form>

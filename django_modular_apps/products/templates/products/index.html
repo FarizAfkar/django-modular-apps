@@ -8,11 +8,11 @@
 {% endblock css %}
 
 {% block content %}
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
 
     <!-- Title -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1>Dashboard Product</h1>
+      <h1>Dashboard Products</h1>
     </div>
 
     <!-- Install & Search -->
@@ -56,7 +56,7 @@
       {% endif %}
 
       <!-- Search -->
-      <form method="GET" class="ms-auto w-25 p-2 d-grid gap-2 d-md-flex justify-content-md-end">
+      <form method="GET" class="ms-auto p-2 d-grid gap-2 d-md-flex justify-content-md-end">
         <div class="input-group">
           <input id="search_param" name="search_param" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="BtnSearch" value="{{request.GET.search_param}}">
           <button class="btn btn-outline-secondary" type="submit" id="BtnSearch">Seacrh</button>

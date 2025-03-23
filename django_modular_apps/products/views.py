@@ -89,6 +89,7 @@ def home(request, name):
 
     # Render Context to HTML
     context = {
+        'module' : name,
         'formproduct' : ProductForm,
         'listproduct' : listproduct,
         'product_none' : product_none,

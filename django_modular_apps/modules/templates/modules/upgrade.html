@@ -11,15 +11,11 @@
 {% endblock css %}
 
 {% block content %}
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
 
     <!-- Title -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1>Upgrade Module
-    </div>
-
-    <!-- Install & Search -->
-    <div class="d-flex justify-content-sm-between pt-3 pb-2 mb-3 border-bottom">
     </div>
 
     {% if product_none %}
@@ -29,9 +25,9 @@
       </div>
     {% endif %}
 
-    <form method="POST" class="p-2" enctype="multipart/form-data" id="UpdateProduct">
+    <form method="POST" class="p-2 mx-auto" enctype="multipart/form-data" id="UpdateProduct" style="max-width: 900px;">
       {% csrf_token %}
-      <div class="card text-center w-50 mx-auto">
+      <div class="card text-center w-100 mx-auto">
         <div class="card-header">
           {{name}}
         </div>
@@ -40,22 +36,22 @@
           {% for form in details_product %}
             {% if form.name == 'name' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
                 <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
               </div>
             {% elif form.name == 'barcode' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
                 <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
               </div>
             {% elif form.name == 'price' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
                 <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
               </div>
             {% elif form.name == 'stock' %}
               <div class="input-group mb-3">
-                <span class="input-group-text col-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{form.name}}">{{form.name}}</span>
                 <input type="text" class="form-control text-end" value="{{form.get_internal_type}}" disabled>
               </div>
             {% endif %}
@@ -65,7 +61,7 @@
 
           {% for keys, values in details_module.items %}
             <div class="input-group mb-3">
-              <span class="input-group-text col-2" id="inputGroup-{{keys}}">{{keys}}</span>
+              <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{keys}}">{{keys}}</span>
               <input type="text" class="form-control text-end" value="{{values}}" disabled>
             </div>
           {% endfor %}
@@ -75,13 +71,13 @@
             <div class="row g-2">
               <div class="col-md-5">
                 <div class="input-group">
-                  <span class="input-group-text">Name</span>
+                  <span class="input-group-text col-3">Name</span>
                   <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control">
                 </div>
               </div>
               <div class="col-md-5">
                 <div class="input-group">
-                  <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                  <label class="input-group-text col-3" for="inputGroupSelect01">Options</label>
                   <select class="form-select" id="field-type-add-1" name="field-type-add-1">
                     <option selected disabled>Choose...</option>
                     <option value="TextField">Text</option>
@@ -106,8 +102,8 @@
 
         </div>
         <div class="card-footer text-body-secondary">
-          <a href="{% url 'modules:home' %}" class="btn btn-outline-secondary">Back</a>
-          <button type="submit" class="btn btn-outline-primary" id="BtnUpdate" name="btn_action" value="upgrade_module">Upgrade</button>
+          <a href="{% url 'modules:home' %}" class="btn btn-outline-secondary col-3 col-sm-2">Back</a>
+          <button type="submit" class="btn btn-outline-primary col-3 col-sm-2" id="BtnUpdate" name="btn_action" value="upgrade_module">Upgrade</button>
         </div>
       </div>
     </form>
