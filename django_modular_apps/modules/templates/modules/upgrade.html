@@ -61,38 +61,45 @@
 
           {% for keys, values in details_module.items %}
             <div class="input-group mb-3">
-              <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{keys}}">{{keys}}</span>
-              <input type="text" class="form-control text-end" value="{{values}}" disabled>
+              <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{keys}}">{{values.name}}</span>
+              <input type="text" class="form-control text-end" value="{{values.type}}" disabled>
             </div>
+            {% if forloop.last %}<hr>{% endif %}
           {% endfor %}
 
           <!-- First Service Container (Cannot be deleted) -->
-          <div id="formContainer-1" class="containerDetails">
-            <div class="row g-2">
-              <div class="col-md-5">
-                <div class="input-group">
-                  <span class="input-group-text col-3">Name</span>
-                  <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control">
+          {% for keys, values in details_module.items %}
+            <div id="formContainer-1" class="containerDetails">
+              <div class="row g-2">
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <span class="input-group-text col-3">Name</span>
+                    <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control" value="{{values.name}}">
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-5">
-                <div class="input-group">
-                  <label class="input-group-text col-3" for="inputGroupSelect01">Options</label>
-                  <select class="form-select" id="field-type-add-1" name="field-type-add-1">
-                    <option selected disabled>Choose...</option>
-                    <option value="TextField">Text</option>
-                    <option value="FileField">File</option>
-                    <option value="IntegerField">Number</option>
-                    <option value="DateTimeField">Date & Time</option>
-                    <option value="BooleanField">Radio</option>
-                  </select>
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <label class="input-group-text col-3" for="inputGroupSelect01">Options</label>
+                    <select class="form-select" id="field-type-add-1" name="field-type-add-1">
+                      {% if values.type %}
+                        <option selected>{{values.type}}</option>
+                      {% else %}
+                        <option selected disabled>Choose...</option>
+                      {% endif %}
+                      <option value="TextField">Text</option>
+                      <option value="FileField">File</option>
+                      <option value="IntegerField">Number</option>
+                      <option value="DateTimeField">Date & Time</option>
+                      <option value="BooleanField">Radio</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-2">
-                <button type="button" class="btn btn-danger btn-delContainer hidden-button"><i class="bi bi-x mb-2"></i></button>
+                <div class="col-md-2 mb-2">
+                  <button type="button" class="btn btn-danger btn-delContainer hidden-button"><i class="bi bi-x mb-2"></i></button>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
 
           <!-- Placeholder for additional services -->
           <div id="tmp-other-pricing"></div>

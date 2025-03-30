@@ -7,6 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import permission_required
 from accounts.models import Module, Product
 from modules.forms import ModuleForm
+from collections import defaultdict
 
 # Create your views here.
 def update_version(version):
@@ -107,6 +108,9 @@ def upgrade(request, name):
     # Get Product Attribut
     details_product = Product._meta.get_fields()
 
+    # Processing data into structured JSON format
+    formatted_data = defaultdict(dict)
+
     # Request Post
     if request.method == 'POST':
         # Get Dictionary Post
@@ -115,10 +119,17 @@ def upgrade(request, name):
         # Validate Update Prod
         if not check_fields(fields) and fields['btn_action'] == 'upgrade_module':
 
-            # Get Field Attribut
-            list_fname = [value for key, value in fields.items() if 'field-name-add-' in key]
-            list_ftpye = [value.replace('.', '') for key, value in fields.items() if 'field-type-add-' in key]
-            dict_extra_fields = dict(zip(list_fname, list_ftpye))
+            for key, value in fields.items():
+                if 'field' in key:
+
+                    parts = key.split('-')  # Splitting by '-'
+                    field_number = parts[3]  # Extracting field number
+                    field_attr = parts[1]  # Extracting attribute type (name/type)
+
+                    formatted_data[f'field-{field_number}'][field_attr] = value
+
+                    # Converting to standard dictionary
+                    dict_extra_fields = dict(formatted_data)
 
             # Save To DB
             module.version = update_version(module.version)
