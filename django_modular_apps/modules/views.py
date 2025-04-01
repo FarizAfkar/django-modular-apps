@@ -19,10 +19,13 @@ def update_version(version):
     return f"{x}.{y}"
 
 def check_fields(fields):
-    filtered_values = [value for key, value in fields.items() if 'field-name-add-' in key]
-    if '' in filtered_values:
+    # ADD OR REMOVE
+    if 'field-name-add-1' in fields.keys():
+        filter_name = [value for key, value in fields.items() if 'field-name' in key]
+        filter_type = [value for key, value in fields.items() if 'field-type' in key]
+        return '' not in filter_name and bool(filter_type) and len(filter_name) == len(filter_type)
+    else: # REMOVE ALL
         return True
-    return False
 
 @login_required
 @permission_required('accounts.view_module', raise_exception=True)
@@ -108,6 +111,21 @@ def upgrade(request, name):
     # Get Product Attribut
     details_product = Product._meta.get_fields()
 
+    # Set Extra Field
+    extra_frields = {
+        'Text Field' : 'text',
+        'Text Area' : 'textarea',
+        'File Field' : 'file',
+        'Image Field' : 'file',
+        'Number Field' : 'number',
+        'Date Field' : 'date',
+        'Time Field' : 'time',
+        'Color Field' : 'color',
+        'Checkbox Field' : 'checkbox',
+        'URL Field' : 'url',
+        'Email Field' : 'email',
+    }
+
     # Processing data into structured JSON format
     formatted_data = defaultdict(dict)
 
@@ -117,32 +135,42 @@ def upgrade(request, name):
         fields = request.POST
 
         # Validate Update Prod
-        if not check_fields(fields) and fields['btn_action'] == 'upgrade_module':
+        if check_fields(fields) and fields['btn_action'] == 'upgrade_module':
 
-            for key, value in fields.items():
-                if 'field' in key:
+            # JSON Format
+            if 'field-name-add-1' in fields.keys():
+                for key, value in fields.items():
+                    if 'field' in key:
 
-                    parts = key.split('-')  # Splitting by '-'
-                    field_number = parts[3]  # Extracting field number
-                    field_attr = parts[1]  # Extracting attribute type (name/type)
+                        parts = key.split('-')  # Splitting by '-'
+                        field_number = parts[3]  # Extracting field number
+                        field_attr = parts[1]  # Extracting attribute type (name/type)
 
-                    formatted_data[f'field-{field_number}'][field_attr] = value
+                        formatted_data[f'field-{field_number}'][field_attr] = value
 
-                    # Converting to standard dictionary
-                    dict_extra_fields = dict(formatted_data)
+                        # Converting to standard dictionary
+                        dict_extra_fields = dict(formatted_data)
+            else:
+                dict_extra_fields = {}
 
-            # Save To DB
-            module.version = update_version(module.version)
-            module.extra_fields = dict_extra_fields
-            module.save()
-            info_message = 'Upgrade Module Succees'
+            # Validate Update
+            if not module.extra_fields == dict_extra_fields:
+
+                # Save To DB
+                module.version = update_version(module.version)
+                module.extra_fields = dict_extra_fields
+                module.save()
+                info_message = 'Upgrade Module Succees'
+            else:
+                info_message = 'No data was changed'
         else:
-            info_message = 'No data was changed'
+            info_message = 'Please Check your input again'
 
     context = {
         'name' : name,
         'details_module' : module.extra_fields,
         'details_product' : details_product,
+        'extra_frields' : extra_frields,
         'error_message': error_message,
         'info_message' : info_message
     }

@@ -62,35 +62,60 @@
           {% for keys, values in details_module.items %}
             <div class="input-group mb-3">
               <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{keys}}">{{values.name}}</span>
-              <input type="text" class="form-control text-end" value="{{values.type}}" disabled>
+              <input type="text" class="form-control text-end" value="{{values.type|capfirst}}Field" disabled>
             </div>
             {% if forloop.last %}<hr>{% endif %}
           {% endfor %}
 
           <!-- First Service Container (Cannot be deleted) -->
-          {% for keys, values in details_module.items %}
+          {% if details_module.items %}
+            {% for keys, values in details_module.items %}
+              <div id="formContainer-1" class="containerDetails">
+                <div class="row g-2">
+                  <div class="col-md-5">
+                    <div class="input-group">
+                      <span class="input-group-text col-3">Name</span>
+                      <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control" value="{{values.name}}">
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="input-group">
+                      <label class="input-group-text col-3">Options</label>
+                      <select class="form-select" id="field-type-add-1" name="field-type-add-1">
+                        {% for key, value in extra_frields.items %}
+                          {% if values.type == value %}
+                            <option value={{value}} selected>{{key}}</option>
+                          {% else %}
+                            {% if forloop.first %}<option selected disabled>Choose...</option>{% endif %}
+                            <option value={{value}}>{{key}}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-2 mb-2">
+                    <button type="button" class="btn btn-danger btn-delContainer hidden-button"><i class="bi bi-x mb-2"></i></button>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
             <div id="formContainer-1" class="containerDetails">
               <div class="row g-2">
                 <div class="col-md-5">
                   <div class="input-group">
                     <span class="input-group-text col-3">Name</span>
-                    <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control" value="{{values.name}}">
+                    <input type="text" id="field-name-add-1" name="field-name-add-1" class="form-control">
                   </div>
                 </div>
                 <div class="col-md-5">
                   <div class="input-group">
-                    <label class="input-group-text col-3" for="inputGroupSelect01">Options</label>
+                    <label class="input-group-text col-3">Options</label>
                     <select class="form-select" id="field-type-add-1" name="field-type-add-1">
-                      {% if values.type %}
-                        <option selected>{{values.type}}</option>
-                      {% else %}
-                        <option selected disabled>Choose...</option>
-                      {% endif %}
-                      <option value="TextField">Text</option>
-                      <option value="FileField">File</option>
-                      <option value="IntegerField">Number</option>
-                      <option value="DateTimeField">Date & Time</option>
-                      <option value="BooleanField">Radio</option>
+                      {% for key, value in extra_frields.items %}
+                        <option value={{value}}>{{key}}</option>
+                      {% endfor %}
+                      <option selected disabled>Choose...</option>
                     </select>
                   </div>
                 </div>
@@ -99,7 +124,7 @@
                 </div>
               </div>
             </div>
-          {% endfor %}
+          {% endif %}
 
           <!-- Placeholder for additional services -->
           <div id="tmp-other-pricing"></div>
@@ -168,7 +193,6 @@
       // Form Overlay
       $('#UpdateProduct').on('submit', function(){
         $('div#loading').addClass('show');
-        $('#Price').val(numberJoiner($('#Price').val()))
         setTimeout(function() {
           $('div#loading').removeClass('show');
         }, 5000);
@@ -206,7 +230,7 @@
                 });
 
                 // Show delete button only for cloned items
-                if (n > 1) {
+                if (n > 0) {
                     $(this).find('.btn-delContainer').removeClass('hidden-button');
                 } else {
                     $(this).find('.btn-delContainer').addClass('hidden-button');
