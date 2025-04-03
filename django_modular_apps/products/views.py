@@ -138,7 +138,7 @@ def home(request, name):
 
             # Check File
             for key, value in file_request.items():
-                validate_file = validate_uploaded_file(request, value)
+                validate_file = validate_uploaded_file(value)
                 if validate_file['error_size']:
                     error_file = True
                     messages.error(request, f'File size exceeds {settings.MAX_FILE_SIZE / 1024 / 1024:.2f}MB limit.')
@@ -270,7 +270,7 @@ def update(request, name, barcode):
 
             # Check File
             for key, value in file_request.items():
-                validate_file = validate_uploaded_file(request, value)
+                validate_file = validate_uploaded_file(value)
                 if validate_file['error_size']:
                     error_file = True
                     messages.error(request, f'File size exceeds {settings.MAX_FILE_SIZE / 1024 / 1024:.2f}MB limit.')
