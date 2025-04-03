@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load price_filter %}
+{% load custom_filters %}
 {% load crispy_forms_tags %}
 
 {% block css %}
@@ -42,6 +43,29 @@
                 {{form}}
               </div>
             {% endif %}
+          {% endfor %}
+
+          {% for key, value in extra_field.items %}
+            {% if forloop.first %}<hr>{% endif %}
+            <div class="input-group mb-3">
+              {% if value.type == 'textarea' %}
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                <textarea class="form-control" name="extra_{{key}}_{{value.type}}_{{value.name}}" rows="2">{% if value.value %}{{value.value}}{% endif %}</textarea>
+              {% elif value.type == 'checkbox' %}
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                <input type="hidden" name="extra_{{key}}_{{value.type}}_{{value.name}}">
+                <input type="{{value.type}}" class="form-control form-check-input col-1 mx-3 my-auto py-3" name="extra_{{key}}_{{value.type}}_{{value.name}}" {% if value.value %}checked{%else%}unchecked{% endif %}>
+              {% elif value.type == 'file' %}
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                <input type="{{value.type}}" class="form-control" name="extra_{{key}}_{{value.type}}_{{value.name}}">
+                {% if value.value %}
+                <a class="form-control btn btn-outline-primary col-1" type="button" target="_blank" href="{{value.value.base64|decode_base64_file:value.value.filename}}"><i class="bi bi-cloud-arrow-down"></i></a>
+                {% endif %}
+              {% else %}
+                <span class="input-group-text col-3 col-sm-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                <input type="{{value.type}}" class="form-control" name="extra_{{key}}_{{value.type}}_{{value.name}}" {% if value.value %}value="{{value.value}}"{% endif %}>
+              {% endif %}
+            </div>
           {% endfor %}
         </div>
         <div class="card-footer text-body-secondary">
@@ -112,11 +136,11 @@
       });
 
       // Timeout Messages
-      setTimeout(function(){
-        if ($('#messages').length > 0){
-          $('#messages').remove();
-        }
-      },2000);
+      setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+          $(this).remove(); // Remove from DOM
+        });
+      }, 2000);
 
       // Prevent Invalid Chars
       const invalidChars = ["-", "e", "+", "E", ",", "."];

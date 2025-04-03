@@ -157,3 +157,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# Allowed MIME types (you can modify this based on your needs)
+ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
+ALLOWED_FILE_TYPES = ['application/pdf', 'text/plain']  # Add more file types if needed
+MAX_FILE_SIZE = 1 * 1024 * 1024  # 1MB limit

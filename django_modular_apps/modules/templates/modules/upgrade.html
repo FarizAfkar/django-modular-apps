@@ -82,7 +82,7 @@
                     <div class="input-group">
                       <label class="input-group-text col-3">Options</label>
                       <select class="form-select" id="field-type-add-1" name="field-type-add-1">
-                        {% for key, value in extra_frields.items %}
+                        {% for key, value in extra_fields.items %}
                           {% if values.type == value %}
                             <option value={{value}} selected>{{key}}</option>
                           {% else %}
@@ -112,10 +112,10 @@
                   <div class="input-group">
                     <label class="input-group-text col-3">Options</label>
                     <select class="form-select" id="field-type-add-1" name="field-type-add-1">
-                      {% for key, value in extra_frields.items %}
+                      <option selected disabled>Choose...</option>
+                      {% for key, value in extra_fields.items %}
                         <option value={{value}}>{{key}}</option>
                       {% endfor %}
-                      <option selected disabled>Choose...</option>
                     </select>
                   </div>
                 </div>
@@ -199,11 +199,11 @@
       });
 
       // Timeout Messages
-      setTimeout(function(){
-        if ($('#messages').length > 0){
-          $('#messages').remove();
-        }
-      },2000);
+      setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+          $(this).remove(); // Remove from DOM
+        });
+      }, 2000);
 
     });
 

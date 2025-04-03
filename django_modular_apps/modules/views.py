@@ -112,7 +112,7 @@ def upgrade(request, name):
     details_product = Product._meta.get_fields()
 
     # Set Extra Field
-    extra_frields = {
+    extra_fields = {
         'Text Field' : 'text',
         'Text Area' : 'textarea',
         'File Field' : 'file',
@@ -170,7 +170,7 @@ def upgrade(request, name):
         'name' : name,
         'details_module' : module.extra_fields,
         'details_product' : details_product,
-        'extra_frields' : extra_frields,
+        'extra_fields' : extra_fields,
         'error_message': error_message,
         'info_message' : info_message
     }

@@ -59,11 +59,11 @@
       $('#infoToast').toast('show');
 
       // Timeout Messages
-      setTimeout(function(){
-        if ($('#messages').length > 0){
-          $('#messages').remove();
-        }
-      },2000);
+      setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+          $(this).remove(); // Remove from DOM
+        });
+      }, 2000);
 
       // Form Overlay
       $('form').on('submit', function(){

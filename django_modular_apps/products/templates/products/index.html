@@ -43,6 +43,21 @@
                       {{form}}
                     </div>
                   {% endfor %}
+                  {% for key, value in extra_fields.items %}
+                  <div class="input-group mb-3">
+                    {% if value.type == 'textarea' %}
+                      <span class="input-group-text col-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                      <textarea class="form-control" name="extra_{{key}}_{{value.type}}_{{value.name}}" rows="2"></textarea>
+                    {% elif value.type == 'checkbox' %}
+                      <span class="input-group-text col-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                      <input type="hidden" name="extra_{{key}}_{{value.type}}_{{value.name}}">
+                      <input type="{{value.type}}" class="form-control form-check-input col-1 mx-3 my-auto py-3" name="extra_{{key}}_{{value.type}}_{{value.name}}">
+                    {% else %}
+                      <span class="input-group-text col-2" id="inputGroup-{{key}}">{{value.name}}</span>
+                      <input type="{{value.type}}" class="form-control" name="extra_{{key}}_{{value.type}}_{{value.name}}">
+                    {% endif %}
+                  </div>
+                  {% endfor %}
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary col-2" data-bs-dismiss="modal">Close</button>
@@ -111,14 +126,14 @@
               {% if perms.accounts.delete_product %}
                 <td class="text-center" style="border-left:none">
                   <!-- Action -->
-                  <button class="btn btn-outline-danger btn-sm" href="" type="button" data-bs-toggle="modal" data-bs-target="#uninstallMod">Delete</button>
+                  <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#uninstallMod{{product.barcode}}">Delete</button>
 
                   <!-- Modal -->
-                  <div class="modal fade" id="uninstallMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uninstallModLabel" aria-hidden="true">
+                  <div class="modal fade" id="uninstallMod{{product.barcode}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uninstallMod{{product.barcode}}Label" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="uninstallModLabel">Delete Record</h1>
+                          <h1 class="modal-title fs-5" id="uninstallMod{{product.barcode}}Label">Delete Record</h1>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -233,11 +248,11 @@
       });
 
       // Timeout Messages
-      setTimeout(function(){
-        if ($('#messages').length > 0){
-          $('#messages').remove();
-        }
-      },2000);
+      setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+          $(this).remove(); // Remove from DOM
+        });
+      }, 2000);
 
       // Show Reset Search
       var search_param = $('#search_param').val();
@@ -282,6 +297,15 @@
         var price = $(this).val();
         var price_format = numberSparator(price)
         $('#Price').val(price_format)
+      });
+
+      // Checkbox
+      $("input[name^=extra_field-9_checkbox]").change(function() {
+        if ($(this).is(":checked")) {
+            $(this).prev('input[type="hidden"]').prop("disabled", true); // Disable hidden input
+          } else {
+            $(this).prev('input[type="hidden"]').prop("disabled", false); // Enable hidden input
+        }
       });
 
     });

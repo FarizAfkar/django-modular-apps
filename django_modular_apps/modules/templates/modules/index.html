@@ -242,11 +242,11 @@
       });
 
       // Timeout Messages
-      setTimeout(function(){
-        if ($('#messages').length > 0){
-          $('#messages').remove();
-        }
-      },2000);
+      setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+          $(this).remove(); // Remove from DOM
+        });
+      }, 2000);
 
       // Show Reset Search
       var search_param = $('#search_param').val();
