@@ -3,12 +3,12 @@
 
 A modular Django-based web application where modules can be installed, upgraded, and uninstalled dynamically.
 
-## 🔗 Table of content
+## Table of content
 
 
-- [Features](#Features)
+- [Features](##Features)
 
-- [Tech Stack](#TechStack)
+- [Tech Stack](##TechStack)
 
 - [Environment Variables](#EnvironmentVariables)
 
@@ -21,7 +21,7 @@ A modular Django-based web application where modules can be installed, upgraded,
 - [License](#License)
 
 
-## 🔗 Features
+## Features
 
 ✅ Modular App Engine for handling modules dynamically
 
@@ -34,7 +34,7 @@ A modular Django-based web application where modules can be installed, upgraded,
 ✅ Field Modification Handling during upgrades
 
 
-## 🔗 Tech Stack
+## Tech Stack
 
 **Backend:** Django
 
@@ -43,7 +43,7 @@ A modular Django-based web application where modules can be installed, upgraded,
 **Frontend:** HTML, CSS, Bootstrap
 
 
-## 🔗 Environment Variables
+## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
 
@@ -75,7 +75,7 @@ PUBLIC_EMAIL = public@hashmicro.com
 PUBLIC_PASS = password2025
 ```
 
-## 🔗 Installation
+## Installation
 
 🔹 Prerequisites
 Ensure you have the following installed:
@@ -118,7 +118,9 @@ python manage.py runserver
 ```
 
 Now, open http://127.0.0.1:8000/ in your browser.
-## 🔗 Usage/Examples
+
+
+## Usage/Examples
 
 🔹 Role-Based Access Control (RBAC)
 
@@ -194,12 +196,12 @@ Now, open http://127.0.0.1:8000/ in your browser.
     2. The Product selected will popout validation 'Are you sure to Delete this Record?' then click Yes
 
     3. The Product and its landing page will be removed
-## 🔗 Screenshots
+## Screenshots
 
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
 
-## 🔗 License
+## License
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)]((https://choosealicense.com/licenses/mit/))
 
@@ -207,8 +209,9 @@ Now, open http://127.0.0.1:8000/ in your browser.
 
 ![Django](https://img.shields.io/badge/Django-4.x-green?logo=django)  
 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue?logo=postgresql)  
-## 🔗 Contact
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue?logo=postgresql)
+
+## Contact
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-FarizAfkar-blue?logo=linkedin)](https://www.linkedin.com/in/farizafkar/)  
 [![Email](https://img.shields.io/badge/Email-Contact%20Me-red?logo=gmail)](mailto:high.oc7ane@gmail.com)
