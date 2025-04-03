@@ -197,9 +197,21 @@ Now, open http://127.0.0.1:8000/ in your browser.
 
     3. The Product and its landing page will be removed
 ## Screenshots
+![App Screenshot 1](https://github.com/user-attachments/assets/9c1eb3c1-ed48-4f0a-b0d6-98295311b8dc)
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot 2](https://github.com/user-attachments/assets/9f8e66d7-30c1-40f9-98ad-945c05f5794e)
 
+![App Screenshot 3](https://github.com/user-attachments/assets/40d685e9-95d5-4699-b108-f15c82a52392)
+
+![App Screenshot 4](https://github.com/user-attachments/assets/ca3e5388-1c32-48d8-89e4-1b28d53f034d)
+
+![App Screenshot 5](https://github.com/user-attachments/assets/70467495-bc6d-4a35-b3f3-26ed88a2eb3c)
+
+![App Screenshot 6](https://github.com/user-attachments/assets/c9ec3100-5cb7-4044-990a-e45fafa3c0a1)
+
+![App Screenshot 7](https://github.com/user-attachments/assets/cae79d76-3e56-4783-8d42-a9411d8fec13)
+
+![App Screenshot 8](https://github.com/user-attachments/assets/e2b64c1c-6ca8-4e89-a2aa-4092728dda4f)
 
 ## License
 
