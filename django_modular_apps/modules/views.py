@@ -100,7 +100,7 @@ def home(request):
 def upgrade(request, name):
     # Get Object Module
     try:
-        module = Module.objects.get(name=name)
+        module = Module.objects.get(name=name, installed=True)
     except Module.DoesNotExist:
         raise PermissionDenied()
 
@@ -182,7 +182,7 @@ def upgrade(request, name):
 def uninstall(request, name):
     # Get Object Module
     try:
-        module = Module.objects.get(name=name)
+        module = Module.objects.get(name=name, installed=True)
         # Validate
         if not module.installed == False:
             module.installed = False

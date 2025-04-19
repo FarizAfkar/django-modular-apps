@@ -224,7 +224,7 @@ def home(request, name):
 def detail(request, name, barcode):
     # Get Detail Product
     try:
-        module = Module.objects.get(name=name)
+        module = Module.objects.get(name=name, installed=True)
         populated_data = Product.objects.get(barcode=barcode, module_id=module.id_module)
         details = ProductForm(instance=populated_data)
     except Exception as e:
@@ -245,7 +245,7 @@ def detail(request, name, barcode):
 def update(request, name, barcode):
     # Get Detail Product
     try:
-        module = Module.objects.get(name=name)
+        module = Module.objects.get(name=name, installed=True)
         populated_data = Product.objects.get(barcode=barcode, module_id=module.id_module)
         details = ProductForm(instance=populated_data)
     except Exception as e:
@@ -387,7 +387,7 @@ def update(request, name, barcode):
 def delete(request, name, barcode):
     # Get Product
     try:
-        module = Module.objects.get(name=name)
+        module = Module.objects.get(name=name, installed=True)
         Product.objects.get(barcode=barcode, module_id=module.id_module).delete()
     except Exception as e:
         print('Error : ', e)
